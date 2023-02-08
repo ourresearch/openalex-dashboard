@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = os.getenv("DEBUG", False)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "dashboard",
+    "sales",
 ]
 
 MIDDLEWARE = [
@@ -63,7 +64,12 @@ WSGI_APPLICATION = "project.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.parse(os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"), conn_max_age=600)
+    "default": dj_database_url.parse(
+        os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"), conn_max_age=600
+    ),
+    "api_keys": dj_database_url.parse(
+        os.getenv("API_KEYS_DATABASE_URL", "sqlite:///db.sqlite3"), conn_max_age=600
+    ),
 }
 
 
@@ -102,7 +108,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -117,3 +123,30 @@ JAZZMIN_SETTINGS = {
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
     "site_brand": "OpenAlex Dashboard",
 }
+
+
+# create a database router to route the sales app to the api_keys database
+class ApiKeysRouter:
+    def db_for_read(self, model, **hints):
+        if model._meta.app_label == "sales":
+            return "api_keys"
+        return None
+
+    def db_for_write(self, model, **hints):
+        if model._meta.app_label == "sales":
+            return "api_keys"
+        return None
+
+    def allow_relation(self, obj1, obj2, **hints):
+        if obj1._meta.app_label == "sales" or obj2._meta.app_label == "sales":
+            return True
+        return None
+
+    def allow_migrate(self, db, app_label, model_name=None, **hints):
+        if app_label == "sales":
+            return False
+        return False
+
+
+# register the router
+DATABASE_ROUTERS = ["project.settings.ApiKeysRouter"]
