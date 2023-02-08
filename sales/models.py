@@ -13,6 +13,8 @@ class APIKey(models.Model):
 
     class Meta:
         db_table = "api_key"
+        verbose_name = "API Key"
+        verbose_name_plural = "API Keys"
 
     def __str__(self):
         return self.email
