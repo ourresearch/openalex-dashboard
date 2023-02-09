@@ -7,7 +7,6 @@ from sales.models import APIKey
 
 
 class ApiKeyAdmin(admin.ModelAdmin):
-    using = "api_keys"  # this is the name of the database in project/settings.py
     list_display = (
         "email",
         "key",

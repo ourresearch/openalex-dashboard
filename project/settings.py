@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "dashboard",
+    "data",
     "sales",
 ]
 
@@ -69,6 +69,9 @@ DATABASES = {
     ),
     "api_keys": dj_database_url.parse(
         os.getenv("API_KEYS_DATABASE_URL", "sqlite:///db.sqlite3"), conn_max_age=600
+    ),
+    "openalex": dj_database_url.parse(
+        os.getenv("OPENALEX_DATABASE_URL", "sqlite:///db.sqlite3"), conn_max_age=600
     ),
 }
 
@@ -125,8 +128,8 @@ JAZZMIN_SETTINGS = {
 }
 
 
-# create a database router to route the sales app to the api_keys database
-class ApiKeysRouter:
+class ApiKeysDbRouter:
+    # routes to api keys stored within openalex-api-proxy database
     def db_for_read(self, model, **hints):
         if model._meta.app_label == "sales":
             return "api_keys"
@@ -148,5 +151,29 @@ class ApiKeysRouter:
         return False
 
 
-# register the router
-DATABASE_ROUTERS = ["project.settings.ApiKeysRouter"]
+class OpenAlexDbRouter:
+    def db_for_read(self, model, **hints):
+        if model._meta.app_label == "data":
+            return "openalex"
+        return None
+
+    def db_for_write(self, model, **hints):
+        if model._meta.app_label == "data":
+            return "openalex"
+        return None
+
+    def allow_relation(self, obj1, obj2, **hints):
+        if obj1._meta.app_label == "data" or obj2._meta.app_label == "data":
+            return True
+        return None
+
+    def allow_migrate(self, db, app_label, model_name=None, **hints):
+        if app_label == "data":
+            return False
+        return False
+
+
+DATABASE_ROUTERS = [
+    "project.settings.ApiKeysDbRouter",
+    "project.settings.OpenAlexDbRouter",
+]
