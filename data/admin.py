@@ -11,10 +11,22 @@ class ConceptAdmin(admin.ModelAdmin):
         "created_date",
         "updated_date",
     )
+    fields = (
+        "field_of_study_id",
+        "display_name",
+        "description",
+        "wikidata_id",
+        "wikipedia_id",
+        "level",
+        "created_date",
+        "updated_date",
+    )
     search_fields = ("display_name",)
     readonly_fields = (
         "field_of_study_id",
         "description",
+        "display_name",
+        "level",
         "created_date",
         "updated_date",
     )

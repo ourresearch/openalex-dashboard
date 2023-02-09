@@ -18,12 +18,16 @@ class Concept(models.Model):
     @property
     def description(self):
         if self.wikipedia_json:
-            return (
-                self.wikipedia_json.get("query", {})
-                .get("pages", {})[0]
-                .get("terms", "")
-                .get("description", "")[0]
-            )
+            try:
+                parsed_description = (
+                    self.wikipedia_json.get("query", {})
+                    .get("pages", {})[0]
+                    .get("terms", "")
+                    .get("description", "")[0]
+                )
+            except IndexError:
+                parsed_description = None
+            return parsed_description
 
     class Meta:
         verbose_name = "Concept"
