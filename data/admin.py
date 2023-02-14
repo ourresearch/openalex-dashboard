@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from data.models import Concept
+from data.models import Concept, Journal, Publisher
 
 
 class ConceptAdmin(admin.ModelAdmin):
@@ -38,4 +38,60 @@ class ConceptAdmin(admin.ModelAdmin):
         return False
 
 
+class JournalAdmin(admin.ModelAdmin):
+    list_display = (
+        "journal_id",
+        "display_name",
+        "publisher",
+    )
+    fields = (
+        "journal_id",
+        "display_name",
+        "publisher",
+        "wikidata_id",
+    )
+    search_fields = ("display_name",)
+    readonly_fields = (
+        "journal_id",
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return True
+
+
+class PublisherAdmin(admin.ModelAdmin):
+    list_display = (
+        "publisher_id",
+        "display_name",
+        "wikidata_id",
+    )
+    fields = (
+        "publisher_id",
+        "display_name",
+        "wikidata_id",
+        "alternate_titles",
+        "country_code",
+        "parent_publisher",
+        "ror_id",
+        "hierarchy_level",
+    )
+    search_fields = ("display_name",)
+    readonly_fields = (
+        "publisher_id",
+    )
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request):
+        return True
+
+
+
 admin.site.register(Concept, ConceptAdmin)
+admin.site.register(Journal, JournalAdmin)
+admin.site.register(Publisher, PublisherAdmin)
+
