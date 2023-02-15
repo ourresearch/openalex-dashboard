@@ -50,10 +50,11 @@ class JournalAdmin(admin.ModelAdmin):
         "publisher",
         "wikidata_id",
     )
-    search_fields = ("display_name",)
+    search_fields = ("display_name", "publisher")
     readonly_fields = (
         "journal_id",
     )
+    list_filter = ("publisher",)
 
     def has_delete_permission(self, request, obj=None):
         return False

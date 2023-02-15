@@ -75,3 +75,4 @@ class Journal(models.Model):
         verbose_name = "Journal"
         verbose_name_plural = "Journals"
         db_table = "journal"
+        ordering = ["display_name", "publisher"]
