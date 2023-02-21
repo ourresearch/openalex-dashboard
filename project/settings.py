@@ -6,9 +6,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv(
-    "SECRET_KEY", "django-insecure-hj(5gt4h_jfq9xt$j)wmd5920eqk^+6y-t=@_py9^s0a4=w+8p"
-)
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.getenv("DEBUG", False)
 

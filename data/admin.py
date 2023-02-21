@@ -51,9 +51,7 @@ class JournalAdmin(admin.ModelAdmin):
         "wikidata_id",
     )
     search_fields = ("display_name", "publisher")
-    readonly_fields = (
-        "journal_id",
-    )
+    readonly_fields = ("journal_id",)
     list_filter = ("publisher",)
 
     def has_delete_permission(self, request, obj=None):
@@ -80,9 +78,7 @@ class PublisherAdmin(admin.ModelAdmin):
         "hierarchy_level",
     )
     search_fields = ("display_name",)
-    readonly_fields = (
-        "publisher_id",
-    )
+    readonly_fields = ("publisher_id",)
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -91,8 +87,6 @@ class PublisherAdmin(admin.ModelAdmin):
         return True
 
 
-
 admin.site.register(Concept, ConceptAdmin)
 admin.site.register(Journal, JournalAdmin)
 admin.site.register(Publisher, PublisherAdmin)
-
