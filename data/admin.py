@@ -81,7 +81,9 @@ class PublisherAdmin(admin.ModelAdmin):
         "ror_id",
         "alternate_titles",
         "country_code",
+        "is_approved",
     )
+    list_filter = ("is_approved",)
     search_fields = ("display_name",)
     readonly_fields = ("publisher_id", "alternate_titles", "country_code")
 

@@ -48,6 +48,7 @@ class Publisher(models.Model):
     parent_publisher = models.BigIntegerField(blank=True, null=True)
     ror_id = models.CharField(max_length=255, blank=True, null=True)
     hierarchy_level = models.IntegerField(blank=True, null=True)
+    is_approved = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
