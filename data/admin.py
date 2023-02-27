@@ -71,20 +71,37 @@ class PublisherAdmin(admin.ModelAdmin):
         "publisher_id",
         "display_name",
         "wikidata_id",
+        "ror_id",
         "alternate_titles",
         "country_code",
-        "parent_publisher",
-        "ror_id",
-        "hierarchy_level",
     )
     search_fields = ("display_name",)
-    readonly_fields = ("publisher_id",)
+    readonly_fields = ("publisher_id", "alternate_titles", "country_code")
+
+    # permissions
+
+    def has_module_permission(self, request):
+        return is_editor_or_superuser(request.user)
 
     def has_delete_permission(self, request, obj=None):
         return False
 
+    def has_view_permission(self, request, obj=None):
+        return is_editor_or_superuser(request.user)
+
     def has_add_permission(self, request):
+        return is_editor_or_superuser(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_editor_or_superuser(request.user)
+
+
+def is_editor_or_superuser(user):
+    if user.is_superuser:
         return True
+    if user.groups.filter(name="Editors").exists():
+        return True
+    return False
 
 
 admin.site.register(Concept, ConceptAdmin)
