@@ -39,26 +39,35 @@ class ConceptAdmin(admin.ModelAdmin):
 
 
 class JournalAdmin(admin.ModelAdmin):
-    list_display = (
-        "journal_id",
-        "display_name",
-        "publisher",
-    )
-    fields = (
-        "journal_id",
-        "display_name",
-        "publisher",
-        "wikidata_id",
-    )
+    list_display = ("journal_id", "display_name", "publisher", "paper_count")
+    fields = ("journal_id", "display_name", "publisher", "wikidata_id", "paper_count")
     search_fields = ("display_name", "publisher")
     readonly_fields = ("journal_id",)
     list_filter = ("publisher",)
+
+    # change default queryset to only show journals with a paper count and type is not repository
+    def get_queryset(self, request):
+        qs = super(JournalAdmin, self).get_queryset(request)
+        return (
+            qs.filter(paper_count__gt=0, publisher__isnull=True)
+            .exclude(type="repository")
+            .exclude(institution_id__isnull=False)
+        )
 
     def has_delete_permission(self, request, obj=None):
         return False
 
     def has_add_permission(self, request):
-        return True
+        return is_editor_or_superuser(request.user)
+
+    def has_module_permission(self, request):
+        return is_editor_or_superuser(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        return is_editor_or_superuser(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_editor_or_superuser(request.user)
 
 
 class PublisherAdmin(admin.ModelAdmin):

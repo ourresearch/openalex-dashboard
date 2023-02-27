@@ -141,6 +141,8 @@ class Journal(models.Model):
     type = models.CharField(max_length=255, blank=True, null=True)
     fatcat_id = models.CharField(max_length=255, blank=True, null=True)
     wikidata_id = models.CharField(max_length=255, blank=True, null=True)
+    paper_count = models.IntegerField(blank=True, null=True)
+    institution_id = models.BigIntegerField(blank=True, null=True)
 
     def __str__(self):
         return self.display_name
@@ -149,4 +151,4 @@ class Journal(models.Model):
         verbose_name = "Journal"
         verbose_name_plural = "Journals"
         db_table = "journal"
-        ordering = ["display_name", "publisher"]
+        ordering = ["-paper_count"]
