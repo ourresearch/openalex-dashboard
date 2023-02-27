@@ -59,6 +59,8 @@ class Publisher(models.Model):
             self.hierarchy_level = 0
         self.alternate_titles = self.get_alternate_titles()
         self.country_code = self.get_country_code()
+        if not self.ror_id:
+            self.ror_id = self.find_ror_id()
         super(Publisher, self).save(*args, **kwargs)
 
     def get_alternate_titles(self):
@@ -122,6 +124,36 @@ class Publisher(models.Model):
                     return country_code
                 except IndexError:
                     return None
+
+    def find_ror_id(self):
+        # search by wikidata id
+        if self.wikidata_id:
+            wikidata_id = (
+                self.wikidata_id.replace("https://wikidata.org/entity/", "")
+                .replace("https://www.wikidata.org/entity/", "")
+                .replace("https://wikidata.org/wiki/", "")
+                .replace("https://www.wikidata.org/wiki/", "")
+            )
+            url = f"https://api.ror.org/organizations?query={wikidata_id}"
+            response = requests.get(url)
+            if response.status_code == 200:
+                json_response = response.json()
+                try:
+                    ror_id = json_response.get("items", [])[0].get("id", None)
+                    return ror_id
+                except IndexError:
+                    return None
+
+        # then search by name
+        url = 'https://api.ror.org/organizations?query="{display_name}"'.format(display_name=self.display_name)
+        response = requests.get(url)
+        if response.status_code == 200:
+            json_response = response.json()
+            try:
+                ror_id = json_response.get("items", [])[0].get("id", None)
+                return ror_id
+            except IndexError:
+                return None
 
     class Meta:
         verbose_name = "Publisher"
