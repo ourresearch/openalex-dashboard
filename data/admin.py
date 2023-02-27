@@ -39,17 +39,15 @@ class ConceptAdmin(admin.ModelAdmin):
 
 
 class JournalAdmin(admin.ModelAdmin):
-    list_display = ("journal_id", "display_name", "publisher", "paper_count")
-    fields = ("journal_id", "display_name", "publisher", "wikidata_id", "paper_count")
+    list_display = ("journal_id", "display_name", "paper_count")
+    fields = ("journal_id", "display_name", "publisher_id", "wikidata_id", "paper_count", "issns", "webpage")
     search_fields = ("display_name", "publisher")
-    readonly_fields = ("journal_id",)
-    list_filter = ("publisher",)
+    readonly_fields = ("journal_id", "display_name", "wikidata_id", "paper_count", "issns", "webpage")
 
-    # change default queryset to only show journals with a paper count and type is not repository
     def get_queryset(self, request):
         qs = super(JournalAdmin, self).get_queryset(request)
         return (
-            qs.filter(paper_count__gt=0, publisher__isnull=True)
+            qs.filter(paper_count__gt=0, publisher_id__isnull=True)
             .exclude(type="repository")
             .exclude(institution_id__isnull=False)
         )

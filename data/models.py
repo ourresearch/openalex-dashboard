@@ -129,9 +129,9 @@ class Publisher(models.Model):
 
 
 class Journal(models.Model):
-    journal_id = models.BigIntegerField(primary_key=True)
+    journal_id = models.BigAutoField(primary_key=True)
     display_name = models.CharField(max_length=255)
-    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True)
+    publisher_id = models.BigIntegerField(blank=True, null=True)
     issn = models.CharField(max_length=10, blank=True, null=True)
     webpage = models.CharField(max_length=255, blank=True, null=True)
     issns = models.JSONField(blank=True, null=True)
