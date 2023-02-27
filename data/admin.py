@@ -56,7 +56,7 @@ class JournalAdmin(admin.ModelAdmin):
         return False
 
     def has_add_permission(self, request):
-        return is_editor_or_superuser(request.user)
+        return False
 
     def has_module_permission(self, request):
         return is_editor_or_superuser(request.user)
