@@ -178,6 +178,7 @@ class Journal(models.Model):
     wikidata_id = models.CharField(max_length=255, blank=True, null=True)
     paper_count = models.IntegerField(blank=True, null=True)
     institution_id = models.BigIntegerField(blank=True, null=True)
+    updated_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.display_name
