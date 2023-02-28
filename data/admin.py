@@ -49,7 +49,7 @@ class JournalAdmin(admin.ModelAdmin):
         "issns",
         "webpage",
     )
-    search_fields = ("display_name", "publisher")
+    search_fields = ("display_name", "journal_id")
     readonly_fields = (
         "journal_id",
         "display_name",
@@ -99,7 +99,7 @@ class PublisherAdmin(admin.ModelAdmin):
         "is_approved",
     )
     list_filter = ("is_approved",)
-    search_fields = ("display_name",)
+    search_fields = ("display_name", "publisher_id", "alternate_titles", "wikidata_id")
     readonly_fields = ("publisher_id", "alternate_titles", "country_code")
 
     # permissions
