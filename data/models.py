@@ -145,7 +145,9 @@ class Publisher(models.Model):
                     return None
 
         # then search by name
-        url = 'https://api.ror.org/organizations?query="{display_name}"'.format(display_name=self.display_name)
+        url = 'https://api.ror.org/organizations?query="{display_name}"'.format(
+            display_name=self.display_name
+        )
         response = requests.get(url)
         if response.status_code == 200:
             json_response = response.json()

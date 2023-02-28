@@ -40,9 +40,24 @@ class ConceptAdmin(admin.ModelAdmin):
 
 class JournalAdmin(admin.ModelAdmin):
     list_display = ("journal_id", "display_name", "paper_count")
-    fields = ("journal_id", "display_name", "publisher_id", "wikidata_id", "paper_count", "issns", "webpage")
+    fields = (
+        "journal_id",
+        "display_name",
+        "publisher_id",
+        "wikidata_id",
+        "paper_count",
+        "issns",
+        "webpage",
+    )
     search_fields = ("display_name", "publisher")
-    readonly_fields = ("journal_id", "display_name", "wikidata_id", "paper_count", "issns", "webpage")
+    readonly_fields = (
+        "journal_id",
+        "display_name",
+        "wikidata_id",
+        "paper_count",
+        "issns",
+        "webpage",
+    )
 
     def get_queryset(self, request):
         qs = super(JournalAdmin, self).get_queryset(request)
