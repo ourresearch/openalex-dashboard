@@ -27,5 +27,28 @@ class ApiKeyAdmin(admin.ModelAdmin):
         ].initial = datetime.date.today() + datetime.timedelta(days=365)
         return form
 
+    def has_module_permission(self, request):
+        return is_sales_or_superuser(request.user)
+
+    def has_delete_permission(self, request, obj=None):
+        return is_sales_or_superuser(request.user)
+
+    def has_view_permission(self, request, obj=None):
+        return is_sales_or_superuser(request.user)
+
+    def has_add_permission(self, request):
+        return is_sales_or_superuser(request.user)
+
+    def has_change_permission(self, request, obj=None):
+        return is_sales_or_superuser(request.user)
+
+
+def is_sales_or_superuser(user):
+    if user.is_superuser:
+        return True
+    if user.groups.filter(name="Sales").exists():
+        return True
+    return False
+
 
 admin.site.register(APIKey, ApiKeyAdmin)
