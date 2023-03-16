@@ -45,6 +45,7 @@ class JournalAdmin(admin.ModelAdmin):
         "display_name",
         "publisher_id",
         "wikidata_id",
+        "publisher_not_found",
         "paper_count",
         "issns",
         "webpage",
@@ -65,6 +66,7 @@ class JournalAdmin(admin.ModelAdmin):
             qs.filter(paper_count__gt=0, publisher_id__isnull=True)
             .exclude(type="repository")
             .exclude(institution_id__isnull=False)
+            .exclude(publisher_not_found=True)
         )
 
     def has_delete_permission(self, request, obj=None):
