@@ -3,6 +3,7 @@ import json
 import requests
 
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Concept(models.Model):
@@ -168,6 +169,8 @@ class Journal(models.Model):
     display_name = models.CharField(max_length=255)
     publisher_id = models.BigIntegerField(blank=True, null=True)
     issn = models.CharField(max_length=10, blank=True, null=True)
+    apc_prices = models.JSONField(blank=True, null=True)
+    apc_found = models.BooleanField(blank=True, null=True)
     webpage = models.CharField(max_length=255, blank=True, null=True)
     issns = models.JSONField(blank=True, null=True)
     is_oa = models.BooleanField(blank=True, null=True)
@@ -183,6 +186,40 @@ class Journal(models.Model):
 
     def __str__(self):
         return self.display_name
+
+    def clean(self):
+        super().clean()  # keeps the parent class clean() behavior
+
+        try:
+            if self.apc_prices:  # if apc_prices is not None or not empty
+                prices_list = json.loads(self.apc_prices)
+                # validate each item in the list
+                for item in prices_list:
+                    if (
+                        not isinstance(item, dict)
+                        or "price" not in item
+                        or "currency" not in item
+                    ):
+                        raise ValidationError(
+                            'Invalid format for apc_prices. Each item must be a dictionary with "price" and "currency" keys'
+                        )
+                    if not isinstance(item["price"], int):
+                        raise ValidationError(
+                            "Invalid format for apc_prices. Price should be an integer."
+                        )
+                    if (
+                        not isinstance(item["currency"], str)
+                        or len(item["currency"]) != 3
+                    ):
+                        raise ValidationError(
+                            "Invalid format for apc_prices. Currency should be a string that is three letters long."
+                        )
+        except json.JSONDecodeError:
+            raise ValidationError("apc_prices should be a valid JSON string.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)  # Call the "real" save() method.
 
     class Meta:
         verbose_name = "Journal"

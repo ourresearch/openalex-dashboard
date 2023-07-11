@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.utils.html import format_html
+
 
 from data.models import Concept, Journal, Publisher
 
@@ -43,12 +45,14 @@ class JournalAdmin(admin.ModelAdmin):
     fields = (
         "journal_id",
         "display_name",
+        "apc_prices",
+        "apc_found",
+        "webpage_link",
         "publisher_id",
         "wikidata_id",
         "publisher_not_found",
         "paper_count",
         "issns",
-        "webpage",
     )
     search_fields = ("display_name", "journal_id")
     readonly_fields = (
@@ -57,17 +61,14 @@ class JournalAdmin(admin.ModelAdmin):
         "wikidata_id",
         "paper_count",
         "issns",
-        "webpage",
+        "webpage_link",
     )
 
     def get_queryset(self, request):
         qs = super(JournalAdmin, self).get_queryset(request)
-        return (
-            qs.filter(paper_count__gt=0, publisher_id__isnull=True)
-            .exclude(type="repository")
-            .exclude(institution_id__isnull=False)
-            .exclude(publisher_not_found=True)
-        )
+        return qs.filter(
+            paper_count__gt=0, apc_prices=[], is_in_doaj=False, apc_found__isnull=True
+        ).exclude(type="repository")
 
     def has_delete_permission(self, request, obj=None):
         return False
@@ -83,6 +84,14 @@ class JournalAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return is_editor_or_superuser(request.user)
+
+    def webpage_link(self, obj):
+        if obj.webpage:
+            return format_html("<a href='{url}'>{url}</a>", url=obj.webpage)
+        else:
+            return "-"
+
+    webpage_link.short_description = "Webpage"  # Sets column name in admin
 
 
 class PublisherAdmin(admin.ModelAdmin):
