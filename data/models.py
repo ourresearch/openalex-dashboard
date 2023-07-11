@@ -192,9 +192,8 @@ class Journal(models.Model):
 
         try:
             if self.apc_prices:  # if apc_prices is not None or not empty
-                prices_list = json.loads(self.apc_prices)
                 # validate each item in the list
-                for item in prices_list:
+                for item in self.apc_prices:
                     if (
                         not isinstance(item, dict)
                         or "price" not in item
