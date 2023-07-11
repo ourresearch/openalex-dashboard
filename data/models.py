@@ -2,6 +2,7 @@ import json
 
 import requests
 
+from currency_converter import CurrencyConverter
 from django.db import models
 from django.core.exceptions import ValidationError
 
@@ -170,6 +171,7 @@ class Journal(models.Model):
     publisher_id = models.BigIntegerField(blank=True, null=True)
     issn = models.CharField(max_length=10, blank=True, null=True)
     apc_prices = models.JSONField(blank=True, null=True)
+    apc_usd = models.IntegerField(blank=True, null=True)
     apc_found = models.BooleanField(blank=True, null=True)
     webpage = models.CharField(max_length=255, blank=True, null=True)
     issns = models.JSONField(blank=True, null=True)
@@ -216,8 +218,25 @@ class Journal(models.Model):
         except json.JSONDecodeError:
             raise ValidationError("apc_prices should be a valid JSON string.")
 
+    # set apc_usd based on apc_prices. Use the USD price if available, if not convert to USD using the exchange rate
+    def set_apc_usd(self):
+        # try usd first
+        if self.apc_prices:
+            for item in self.apc_prices:
+                if item["currency"] == "USD":
+                    self.apc_usd = item["price"]
+                    break
+
+        # if still not set, convert using the first available currency and convert using currency_converter
+        if not self.apc_usd and self.apc_prices:
+            currency = self.apc_prices[0]["currency"]
+            price = self.apc_prices[0]["price"]
+            c = CurrencyConverter()
+            self.apc_usd = c.convert(price, currency, "USD")
+
     def save(self, *args, **kwargs):
         self.clean()
+        self.set_apc_usd()
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
     class Meta:
