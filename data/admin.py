@@ -48,6 +48,7 @@ class JournalAdmin(admin.ModelAdmin):
         "apc_prices",
         "apc_found",
         "webpage_link",
+        "webpage",
         "publisher_id",
         "wikidata_id",
         "publisher_not_found",
@@ -61,6 +62,7 @@ class JournalAdmin(admin.ModelAdmin):
         "wikidata_id",
         "paper_count",
         "issns",
+        "webpage_link",
     )
 
     def get_queryset(self, request):
