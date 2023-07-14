@@ -61,7 +61,6 @@ class JournalAdmin(admin.ModelAdmin):
         "wikidata_id",
         "paper_count",
         "issns",
-        "webpage_link",
     )
 
     def get_queryset(self, request):
