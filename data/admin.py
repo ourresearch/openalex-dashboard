@@ -67,9 +67,9 @@ class JournalAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super(JournalAdmin, self).get_queryset(request)
-        return qs.filter(
-            paper_count__gt=0, apc_prices=[], is_in_doaj=False, apc_found__isnull=True
-        ).exclude(type="repository")
+        return qs.filter(paper_count__gt=0, is_in_doaj=False).exclude(type="repository")
+
+    list_filter = ("apc_found",)
 
     def has_delete_permission(self, request, obj=None):
         return False
