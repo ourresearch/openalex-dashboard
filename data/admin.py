@@ -71,6 +71,8 @@ class JournalAdmin(admin.ModelAdmin):
 
     list_filter = ("apc_found",)
 
+    ordering = ("-paper_count",)
+
     def has_delete_permission(self, request, obj=None):
         return False
 
