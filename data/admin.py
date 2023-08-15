@@ -102,7 +102,6 @@ class PublisherAdmin(admin.ModelAdmin):
         "publisher_id",
         "display_name",
         "wikidata_id",
-        "paper_count",
     )
     fields = (
         "publisher_id",
