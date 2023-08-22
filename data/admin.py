@@ -55,7 +55,7 @@ class JournalAdmin(admin.ModelAdmin):
         "paper_count",
         "issns",
     )
-    search_fields = ("display_name", "journal_id")
+    search_fields = ("display_name", "journal_id", "issns")
     readonly_fields = (
         "journal_id",
         "display_name",
