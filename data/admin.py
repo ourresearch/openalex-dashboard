@@ -58,7 +58,6 @@ class JournalAdmin(admin.ModelAdmin):
     search_fields = ("display_name", "journal_id", "issns")
     readonly_fields = (
         "journal_id",
-        "display_name",
         "wikidata_id",
         "paper_count",
         "issns",
