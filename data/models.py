@@ -168,11 +168,12 @@ class Publisher(models.Model):
 class Journal(models.Model):
     journal_id = models.BigAutoField(primary_key=True)
     display_name = models.CharField(max_length=255)
-    publisher_id = models.BigIntegerField(blank=True, null=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.DO_NOTHING)
     issn = models.CharField(max_length=10, blank=True, null=True)
     apc_prices = models.JSONField(blank=True, null=True)
     apc_usd = models.IntegerField(blank=True, null=True)
     apc_found = models.BooleanField(blank=True, null=True)
+    merge_into_id = models.BigIntegerField(blank=True, null=True)
     webpage = models.CharField(max_length=255, blank=True, null=True)
     issns = models.JSONField(blank=True, null=True)
     is_oa = models.BooleanField(blank=True, null=True)

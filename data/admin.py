@@ -49,7 +49,7 @@ class JournalAdmin(admin.ModelAdmin):
         "apc_found",
         "webpage_link",
         "webpage",
-        "publisher_id",
+        "publisher",
         "wikidata_id",
         "publisher_not_found",
         "paper_count",
@@ -66,7 +66,7 @@ class JournalAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super(JournalAdmin, self).get_queryset(request)
-        return qs.filter(paper_count__gt=0).exclude(type="repository")
+        return qs.filter(paper_count__gt=0, merge_into_id__isnull=True).exclude(type="repository")
 
     list_filter = ("apc_found",)
 
