@@ -49,7 +49,7 @@ class JournalAdmin(admin.ModelAdmin):
         "apc_found",
         "webpage_link",
         "webpage",
-        "publisher",
+        "publisher_id",
         "wikidata_id",
         "publisher_not_found",
         "paper_count",
