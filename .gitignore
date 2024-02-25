@@ -2,3 +2,7 @@ db.sqlite3
 .idea/
 .env
 __pycache__/
+venv/
+static/admin
+static/jazzmin
+static/vendor

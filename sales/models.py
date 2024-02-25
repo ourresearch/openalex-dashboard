@@ -1,8 +1,10 @@
 from django.db import models
+from functools import cached_property
 
 
 class APIKey(models.Model):
     email = models.CharField(max_length=255, null=False, unique=True)
+    name = models.CharField(max_length=255, null=True, blank=True)
     key = models.CharField(max_length=255, null=False)
     created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True, null=False)
@@ -10,6 +12,8 @@ class APIKey(models.Model):
     is_demo = models.BooleanField(default=False, null=False)
     organization = models.CharField(max_length=500, null=True, blank=True)
     notes = models.CharField(max_length=500, null=True, blank=True)
+    premium_domain = models.CharField(max_length=255, null=True, blank=True)
+    zendesk_organization_id = models.BigIntegerField(null=True, blank=True)
 
     class Meta:
         db_table = "api_key"
@@ -18,3 +22,14 @@ class APIKey(models.Model):
 
     def __str__(self):
         return self.email
+
+    @cached_property
+    def zendesk_api(self):
+        from sales.zendesk_api import ZendeskAPI
+
+        return ZendeskAPI(
+            email=self.email,
+            organization_id=self.zendesk_organization_id,
+            organization_name=self.organization,
+            domain_name=self.premium_domain,
+        )
