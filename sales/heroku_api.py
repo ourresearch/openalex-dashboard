@@ -28,5 +28,5 @@ class HerokuAPI:
         headers = self.headers
         headers["Content-Type"] = "application/json"
         r = requests.patch(url, headers=headers, json=update_dict)
-        r.raise_for_status()
+        # r.raise_for_status()
         return r

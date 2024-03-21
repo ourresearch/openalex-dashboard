@@ -127,6 +127,8 @@ class RatelimitExemptAdmin(admin.ModelAdmin):
         r = heroku_api.update_config_vars(
             app_name="openalex-api-proxy", update_dict=update_dict
         )
+        if r.status_code != 200:
+            print(r.text)
         messages.info(
             request,
             f"heroku api returned status code {r.status_code}. There are {len(all_objs)} rate-limit exempt emails.",
