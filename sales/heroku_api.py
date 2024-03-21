@@ -11,7 +11,7 @@ class HerokuAPI:
         self,
     ) -> None:
         self.base_url = "https://api.heroku.com/apps"
-        self.token = os.getenv("ZENDESK_API_TOKEN")
+        self.token = os.getenv("HEROKU_API_KEY")
         self.headers = {
             "Accept": "application/vnd.heroku+json; version=3",
             "Authorization": f"Bearer: {self.token}",
