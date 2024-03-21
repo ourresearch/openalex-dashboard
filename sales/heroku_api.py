@@ -27,6 +27,7 @@ class HerokuAPI:
         url = f"{self.base_url}/{app_name}/config-vars"
         headers = self.headers
         headers["Content-Type"] = "application/json"
+        print(f"token: {self.token[:10]}...")
         r = requests.patch(url, headers=headers, json=update_dict)
         # r.raise_for_status()
         return r
