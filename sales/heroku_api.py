@@ -33,7 +33,10 @@ class HerokuAPI:
         r = requests.get(url, headers=headers)
         print(f"debug: status code: {r.status_code}")
         config_vars = r.json()
-        print(f'there are {len(config_vars["TOP_SECRET_UNLIMITED_EMAILS"])} emails')
+        print("content")
+        print(r.content)
+        print("headers")
+        print(r.headers)
 
         r = requests.patch(url, headers=headers, json=update_dict)
         print(r)
