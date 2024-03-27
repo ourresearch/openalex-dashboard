@@ -28,6 +28,15 @@ class HerokuAPI:
         headers = self.headers
         headers["Content-Type"] = "application/json"
         print(f"token: {self.token[:10]}...")
+
+        #debugging:
+        r = requests.get(url, headers=headers)
+        print(f"debug: status code: {r.status_code}")
+        config_vars = r.json()
+        print(f"there are {len(config_vars["TOP_SECRET_UNLIMITED_EMAILS"])} emails")
+
         r = requests.patch(url, headers=headers, json=update_dict)
+        print(r)
+        print(r.content)
         # r.raise_for_status()
         return r
