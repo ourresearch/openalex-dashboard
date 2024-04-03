@@ -28,6 +28,7 @@ class HerokuAPI:
         headers = self.headers
         headers["Content-Type"] = "application/json"
         print(f"token: {self.token[:10]}...{self.token[-4:]}")
+        print(f"url: {url}")
 
         #debugging:
         r = requests.get(url, headers=headers)
